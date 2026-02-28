@@ -1,0 +1,158 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+
+using namespace std;
+
+class DataOfItems {
+public:
+    // Constructor
+    DataOfItems() {
+        cout << "Welcome to the Sports Ticket Calculation Program!" << endl;
+        cout << "--------------------------------------------------" << endl << endl;
+    }
+
+    // Destructor
+    ~DataOfItems() {
+        cout << "\n\n--------------------------------------------------" << endl << endl;
+        cout << "Thank you for using the Sports Ticket Calculation Program" << endl << endl;
+        cout << "Programming project, fourth group" << endl;
+        cout << "Group names: " << endl;
+        cout << "Khalid Alharti, Riyadh Almalki, Baraa Felemban, Ziyad Alzaydi" << endl;
+        cout << "Abdulrahman Aldajani, Osamah Alzharni, Saleh Algamdi." << endl << endl;
+    }
+
+    // Member Functions
+    float TotalPrice(float arr[], int size);
+    float Average(float arr[], int size);
+    void AddPercentage(float arr[], int size);
+    float TotalAP(float arr[], int size);
+    void BubbleSort(float arr[], int size);
+
+private:
+    string Clubnames[10];
+    float TicketPrice[10];
+    int i, size;
+};
+
+// Calculate the total price
+float DataOfItems::TotalPrice(float arr[], int size) {
+    float sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum = sum + arr[i];
+    }
+    return sum;
+}
+
+// Calculate the average
+float DataOfItems::Average(float arr[], int size) {
+    float avg = 0;
+    avg = TotalPrice(arr, size) / 10;
+    return avg;
+}
+
+// Calculate the percentage increase 20%
+void DataOfItems::AddPercentage(float arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        arr[i] += arr[i] * 0.20;
+    }
+}
+
+// Calculate the sum after percentage increase 20%
+float DataOfItems::TotalAP(float arr[], int size) {
+    float sum = 0; // Fixed: Initialized sum to 0
+    for (int i = 0; i < size; i++) {
+        sum = sum + arr[i];
+    }
+    return sum;
+}
+
+// Bubble sort to find less price
+void DataOfItems::BubbleSort(float arr[], int size) {
+    float temp;
+    int iteration, index;
+    for (iteration = 1; iteration < size; iteration++) {
+        for (index = 0; index < size - iteration; index++) {
+            if (arr[index] > arr[index + 1]) {
+                temp = arr[index];
+                arr[index] = arr[index + 1];
+                arr[index + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    // Class object
+    DataOfItems FuncList;
+
+    // Files
+    ifstream ifile;
+    ofstream ofile;
+
+    // Variables
+    string Clubnames[10];
+    float TicketPrice[10];
+    int size = 10;
+
+    // Get clubs names from user
+    cout << "Enter 10 Clubs: " << endl;
+    for (int i = 0; i < 10; i++) {
+        cin >> Clubnames[i];
+    }
+    cout << endl;
+
+    // Get ticket prices from file
+    ifile.open("TicketPrices.txt");
+    if (ifile.is_open()) {
+        for (int i = 0; i < 10; i++) {
+            ifile >> TicketPrice[i];
+        }
+        ifile.close();
+    }
+
+    // Display clubs & prices and save to file
+    ofile.open("Clubs & Ticket Prices.txt");
+    ofile << left << setw(20) << "Club" << "Ticket Price" << endl;
+    for (int i = 0; i < 10; i++) {
+        ofile << left << setw(20) << Clubnames[i] << TicketPrice[i] << endl;
+    }
+    ofile.close();
+
+    // Calculate and save total price
+    ofile.open("Total Price.txt");
+    ofile << "The Total Price = " << FuncList.TotalPrice(TicketPrice, size) << endl;
+    ofile.close();
+
+    // Calculate and save average price
+    ofile.open("Average Prices.txt");
+    ofile << "The Average = " << FuncList.Average(TicketPrice, size) << endl;
+    ofile.close();
+
+    // Increase prices by 20%
+    FuncList.AddPercentage(TicketPrice, size);
+
+    // Save prices after 20% increase
+    ofile.open("Prices after percentage increase 20%.txt");
+    ofile << "Prices after percentage increase 20%: " << endl;
+    ofile << left << setw(20) << "Club" << "Ticket Price" << endl;
+    for (int i = 0; i < 10; i++) {
+        ofile << left << setw(20) << Clubnames[i] << TicketPrice[i] << endl;
+    }
+    ofile.close();
+
+    // Calculate and save total after increase
+    ofile.open("Total Price after percentage increase 20%.txt");
+    ofile << "The Total Price after percentage increase 20% = " 
+          << FuncList.TotalAP(TicketPrice, size) << endl;
+    ofile.close();
+
+    // Find the lowest price & add 30%
+    FuncList.BubbleSort(TicketPrice, size);
+    cout << "The less price = " << TicketPrice[0] << endl;
+    cout << "The less price after percentage increase 30% = " 
+         << (TicketPrice[0] + (TicketPrice[0] * 0.30)) << endl;
+
+    return 0;
+}
